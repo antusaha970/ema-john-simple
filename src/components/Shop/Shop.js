@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import fakeData from '../../fakeData';
-import { addToDatabaseCart } from '../../utilities/fakedb';
+import { addToDatabaseCart, getDatabaseCart } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import Product from '../Products/Product';
 import './Shop.css';
@@ -11,17 +12,38 @@ const Shop = () => {
     const [products, setProducts] = useState(first10);
     const [cart,setCart] = useState([]);
 
+    useEffect(()=>{
+        const savedCart = getDatabaseCart();
+        const keys = Object.keys(savedCart);
+        const previousProducts = keys.map(key => {
+            const product = fakeData.find(product => product.key === key);
+            product.quantity = savedCart[key];
+            return product;
+        });
+        setCart(previousProducts);
+    },[])
+
     const handleAddToCart = (product) =>{
-        const newCart = [...cart,product];
+        let count = 1;
+        let newCart;
+        const toBeAdded = product.key;
+        const sameProduct = cart.find(item => item.key === toBeAdded);
+        if(sameProduct){
+            count = sameProduct.quantity + 1;
+            sameProduct.quantity = count;
+            newCart = [...cart,sameProduct];
+        }
+        else{
+            product.quantity = count;
+            newCart = [...cart,product];
+        }
         setCart(newCart);
-        const sameProductArray = newCart.filter(item => item.key === product.key);
-        const count = sameProductArray.length;
         addToDatabaseCart(product.key,count);
     }
 
 
     return (
-        <div className="shop-container">
+        <div className="flex-container">
             <div className="product-container">
                 <ul>
                     {
