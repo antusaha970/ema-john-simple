@@ -39,7 +39,6 @@ function Login() {
           photo: photoURL
         }
         setUser(userInfo);
-        console.log(displayName, email, photoURL);
       })
       .catch(err => {
         console.log(err);
