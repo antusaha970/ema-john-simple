@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import fakeData from '../../fakeData';
 import { getDatabaseCart, processOrder, removeFromDatabaseCart } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import ReviewItem from '../ReviewItem/ReviewItem';

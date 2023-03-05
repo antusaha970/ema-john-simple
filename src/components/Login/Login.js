@@ -103,6 +103,7 @@ function Login() {
           //   var user = userCredential.user;
           const newUserInfo = { ...user };
           newUserInfo.success = true;
+          newUserInfo.isLoggedIn = true;
           setUser(newUserInfo);
           setLoggedInUser(newUserInfo);
           // sendVerificationEmail();
