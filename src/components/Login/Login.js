@@ -20,13 +20,23 @@ function Login() {
     success: false
   });
 
-  const [loggedInUser,setLoggedInUser] = useContext(UserContext);
+  const [loggedInUser, setLoggedInUser] = useContext(UserContext);
 
   const history = useHistory();
   const location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
 
   const provider = new firebase.auth.GoogleAuthProvider();
+
+  const sendVerificationEmail = () => {
+    firebase.auth().currentUser.sendEmailVerification()
+      .then(() => {
+        // Email verification sent!
+        alert('An verification mail has been sent to your email');
+        // ...
+      });
+  }
+
   const handleSignIn = () => {
     firebase.auth()
       .signInWithPopup(provider)
@@ -39,6 +49,7 @@ function Login() {
           photo: photoURL
         }
         setUser(userInfo);
+        setLoggedInUser(true);
       })
       .catch(err => {
         console.log(err);
@@ -71,6 +82,7 @@ function Login() {
           newUserInfo.name = user.name;
           setUser(newUserInfo);
           updateUserName(user.name);
+          alert(`Welcome ${user.name}!`);
           // ...
         })
         .catch((error) => {
@@ -79,6 +91,7 @@ function Login() {
           const newUserInfo = { ...user };
           newUserInfo.error = errorMessage;
           setUser(newUserInfo);
+          console.log(errorMessage);
           // ..
         });
 
@@ -87,19 +100,20 @@ function Login() {
       firebase.auth().signInWithEmailAndPassword(user.email, user.password)
         .then((userCredential) => {
           // Signed in
-        //   var user = userCredential.user;
+          //   var user = userCredential.user;
           const newUserInfo = { ...user };
           newUserInfo.success = true;
           setUser(newUserInfo);
           setLoggedInUser(newUserInfo);
+          // sendVerificationEmail();
           history.replace(from);
-          console.log(user);
         })
         .catch((error) => {
           var errorCode = error.code;
           var errorMessage = error.message;
           const newUserInfo = { ...user };
           newUserInfo.error = errorMessage;
+          console.log(errorMessage);
           setUser(newUserInfo);
         });
     }
@@ -141,8 +155,23 @@ function Login() {
     });
   }
 
+  const sendPasswordResetEmail = (email) => {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        // Password reset email sent!
+        alert('A mail has been sent to your mail address');
+        // ..
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+      });
+  }
+
+
   return (
-    <div style={{textAlign:'center'}}>
+    <div style={{ textAlign: 'center' }}>
       <h1>Ema-john</h1>
       <p>Sign in with google</p>
       {
@@ -169,6 +198,7 @@ function Login() {
         <br />
         <input type="submit" value={!isNewUser ? 'Sign in' : 'Sign up'} />
       </form>
+      <button onClick={()=> sendPasswordResetEmail(user.email)}>Reset password</button>
       <p style={{ color: 'red' }}>{user.error}</p>
       {
         user.success && <p style={{ color: 'green' }}>Sign{isNewUser ? ' up ' : ' in '}Successful</p>
