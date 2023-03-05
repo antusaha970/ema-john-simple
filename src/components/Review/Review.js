@@ -16,12 +16,17 @@ const Review = () => {
     useEffect(() => {
         const savedCart = getDatabaseCart();
         const keys = Object.keys(savedCart);
-        const cartProducts = keys.map(key => {
-            const product = fakeData.find(item => item.key === key);
-            product.quantity = savedCart[key];
-            return product;
-        });
-        setCart(cartProducts);
+        fetch('http://localhost:5000/getProductsByKeys', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify(keys)
+        })
+        .then(res =>  res.json())
+        .then(data => {
+            setCart(data);
+        })
     }, [])
 
     const removePd = (productKey) => {
@@ -30,11 +35,11 @@ const Review = () => {
         removeFromDatabaseCart(productKey);
     }
 
-    const handleProceedOrder = ()=>{
+    const handleProceedOrder = () => {
         history.push('/shipment');
-    } 
+    }
     let orderImg;
-    if(isPlaced){
+    if (isPlaced) {
         orderImg = <img src={happyImg} alt="" />
     }
     return (
