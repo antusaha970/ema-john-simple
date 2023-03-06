@@ -17,7 +17,7 @@ const Shipment = () => {
             ...loggedInUser,products:cartProduct,shipmentDate:  new Date(),...deliveryInfo,
         }
 
-        fetch('http://localhost:5000/saveOrder',{
+        fetch('https://ema-john-server.cyclic.app/saveOrder',{
             method: 'POST',
             headers:{
                 'Content-Type':'application/json',

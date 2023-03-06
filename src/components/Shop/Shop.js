@@ -10,7 +10,7 @@ const Shop = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/products')
+        fetch('https://ema-john-server.cyclic.app/products')
             .then(response => response.json())
             .then(data => setProducts(data));
     }, [])
@@ -20,7 +20,7 @@ const Shop = () => {
     useEffect(() => {
         const savedCart = getDatabaseCart();
         const keys = Object.keys(savedCart);
-        fetch('http://localhost:5000/getProductsByKeys', {
+        fetch('https://ema-john-server.cyclic.app/getProductsByKeys', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',

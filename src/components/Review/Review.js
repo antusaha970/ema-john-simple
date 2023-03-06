@@ -15,7 +15,7 @@ const Review = () => {
     useEffect(() => {
         const savedCart = getDatabaseCart();
         const keys = Object.keys(savedCart);
-        fetch('http://localhost:5000/getProductsByKeys', {
+        fetch('https://ema-john-server.cyclic.app/getProductsByKeys', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
